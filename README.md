@@ -1,4 +1,4 @@
-# Forecast daily sessions using time series ARIMA_PLUS model in Big Query
+# Forecast daily sessions using time series ARIMA_PLUS model in BQ
 
 
 - Create historical sessions data using public GA4 dataset in Big Query
