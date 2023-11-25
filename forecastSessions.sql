@@ -28,6 +28,24 @@ CREATE OR REPLACE MODEL `bqml.daily_sessions_prediction_model`
       FROM `bqml.daily_sessions` where date BETWEEN '2020-01-01' AND '2020-12-31'
 ;
 
+--evaluate model using next historical year
+SELECT
+  *
+FROM
+  ml.EVALUATE(MODEL `burcuproject.bqml.daily_sessions_prediction_model`, (
+SELECT
+  
+        date,
+        device_category,
+        sessions
+FROM
+   `burcuproject.bqml.daily_sessions`
+WHERE
+  date BETWEEN '2021-01-01' AND '2021-12-31'),
+    STRUCT(TRUE AS perform_aggregation, 30 AS horizon))
+;
+
+
 --combine forecasted and historical sessions per day and device category
 SELECT
         device_category,
@@ -37,6 +55,7 @@ SELECT
         CAST(NULL AS FLOAT64)           AS `sessions_lower_bound`,
         CAST(NULL AS FLOAT64)           AS `sessions_upper_bound`,
       FROM `burcuproject.bqml.daily_sessions`
+	WHERE date BETWEEN '2020-01-01' AND '2020-12-31'
       UNION ALL
       SELECT
         device_category,
